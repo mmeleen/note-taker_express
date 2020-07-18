@@ -6,7 +6,10 @@ var path = require("path");
 module.exports = function(app) {
   // API GET Request
   app.get("/api/notes", function(req, res) {
-    console.log("get");
+    console.log("get");    
+    var notes = JSON.parse(fs.readFileSync(path.join(__dirname, "../../db/db.json"), "utf8"));
+    res.send(notes);
+    console.log(notes);
   });
 
   // API POST Request
