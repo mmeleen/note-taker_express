@@ -1,9 +1,7 @@
 //Dependencies
-var fs = require("fs");
-var path = require("path");
-
-// Unique ID counter
-uniqueId = 4;
+const fs = require("fs");
+const path = require("path");
+const { v4: uuidv4 } = require("uuid");
 
 // Routes
 module.exports = function(app) {
@@ -18,15 +16,23 @@ module.exports = function(app) {
   // API POST Request
   app.post("/api/notes", function(req, res) {
     console.log("post");
+    let notesRead = JSON.parse(fs.readFileSync(path.join(__dirname, "../../db/db.json"), "utf8"));
     let newNote = req.body;
-    newNote.id = uniqueId;
-    uniqueId += 1;
-    console.log(newNote, uniqueId);
+    newNote.id = uuidv4();
+    console.log(newNote.id);
+    notesRead.push(newNote);
+    let notesWrite = JSON.stringify(notesRead);
+    fs.writeFileSync(path.join(__dirname, "../../db/db.json"), notesWrite, "utf8");
+    console.log(newNote);
+    console.log(notesRead);
+    console.log(notesWrite);
+    res.end();
   });
 
   // API DELETE
   app.delete("/api/notes/:id", function(req, res) {
     console.log("delete");
+    console.log(req.params.id);
   });
 };
 
