@@ -33,6 +33,12 @@ module.exports = function(app) {
   app.delete("/api/notes/:id", function(req, res) {
     console.log("delete");
     console.log(req.params.id);
+    let notesRead = JSON.parse(fs.readFileSync(path.join(__dirname, "../../db/db.json"), "utf8"));
+    let deleteId = req.params.id;
+    let updatedNotes = JSON.stringify(notesRead.filter(el => el.id !== deleteId));
+    fs.writeFileSync(path.join(__dirname, "../../db/db.json"), updatedNotes, "utf8");
+    console.log(updatedNotes);
+    res.end();
   });
 };
 
